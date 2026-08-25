@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drone Telemetry Console</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 2rem; color: #17212b; background: #f2f5f7; }
+    main { max-width: 860px; margin: auto; background: white; padding: 2rem; border: 1px solid #cad3da; }
+    h1 { margin-top: 0; }
+    .status { color: #176b42; font-weight: 600; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border-bottom: 1px solid #dde3e8; text-align: left; padding: .65rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Drone telemetry stream encryption</h1>
+    <p class="status">Local deterministic service ready</p>
+    <table aria-label="workflow overview">
+      <thead><tr><th>Workflow</th><th>Steps</th><th>Persistence</th></tr></thead>
+      <tbody>
+        <tr><td>Create, review, archive</td><td>4</td><td>Record, AuditEvent, Workflow</td></tr>
+        <tr><td>Search, update, publish</td><td>4</td><td>Record, Attachment</td></tr>
+        <tr><td>Import and report</td><td>4</td><td>All entities</td></tr>
+      </tbody>
+    </table>
+  </main>
+</body>
+</html>
