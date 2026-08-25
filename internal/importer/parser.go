@@ -6,7 +6,6 @@ import (
 	"io"
 	"strconv"
 	"strings"
-	"unsafe"
 
 	"telemetry.local/drone/internal/domain"
 )
@@ -32,12 +31,10 @@ func (r Result) RejectedCount() int {
 	return len(r.Rejected)
 }
 
-type Processor struct {
-	titleScratch []byte
-}
+type Processor struct{}
 
 func NewProcessor() *Processor {
-	return &Processor{titleScratch: make([]byte, 0, 256)}
+	return &Processor{}
 }
 
 func parseLine(line string) (Row, error) {
@@ -57,7 +54,6 @@ func ParseBatch(r io.Reader, batch string, baseRow int) (Result, error) {
 
 func (p *Processor) ParseBatch(r io.Reader, batch string, baseRow int) (Result, error) {
 	result := Result{Records: make([]domain.Record, 0), Attachments: make([]domain.Attachment, 0), Rejected: make([]string, 0)}
-	p.titleScratch = p.titleScratch[:0]
 	scanner := bufio.NewScanner(r)
 	row := baseRow
 	for scanner.Scan() {
@@ -71,12 +67,7 @@ func (p *Processor) ParseBatch(r io.Reader, batch string, baseRow int) (Result, 
 			row++
 			continue
 		}
-		p.titleScratch = append(p.titleScratch, parsed.Title...)
-		title := ""
-		if len(p.titleScratch) > 0 {
-			title = unsafe.String(&p.titleScratch[0], len(p.titleScratch))
-		}
-		record := domain.Record{ID: parsed.ID, Title: title, Status: domain.StatusPending, Payload: parsed.Payload, Version: 1, CreatedAt: int64(row), UpdatedAt: int64(row)}
+		record := domain.Record{ID: parsed.ID, Title: parsed.Title, Status: domain.StatusPending, Payload: parsed.Payload, Version: 1, CreatedAt: int64(row), UpdatedAt: int64(row)}
 		if err := domain.ValidateRecord(record); err != nil {
 			result.Rejected = append(result.Rejected, fmt.Sprintf("row %d: %v", row, err))
 			row++
